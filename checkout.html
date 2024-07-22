@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            box-sizing: border-box;
+            transition: 0.5s;
+        }
+
+        body {
+            height: 100vh;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            padding: 0 20%;
+            background-color: white;
+        }
+
+        header {
+            width: 100%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 80px;
+            border-bottom: 1px solid #f2f2f2;
+            background-color: lavenderblush;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 5%;
+        }
+
+        .logo {
+            font-size: 26px;
+            font-weight: 800;
+        }
+
+        .menu-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            list-style-type: none;
+        }
+
+        .menu-item {
+            margin: 2rem;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .red {
+            color: rgb(167, 33, 10);
+        }
+
+        .progress-checkout-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 60%;
+            margin-bottom: 1rem;
+        }
+
+        .menu-icons-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px; /* Add padding as needed */
+        }
+
+        .menu-icons-container div {
+            height: 30px;
+            font-size: large; /* Set the desired height */
+            margin: 0 10px; /* Add margin between icons */
+            cursor: pointer; /* Add a pointer cursor for better UX */
+        }
+
+        .menu-icons-container div:hover {
+            color: red; /* Change color on hover as desired */
+        }
+
+        .progress-step-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        .step-check {
+            background-color: rgb(0, 132, 255);
+            height: 30px;
+            width: 30px;
+            border-radius: 30px;
+            margin-bottom: 1rem;
+            position: relative;
+            background-image: url(Resources/check.svg);
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: 60%;
+            display: inline-block;
+        }
+
+        .step-check.active {
+            background-color: rgb(0, 132, 255);
+        }
+
+        .progress-step-container:nth-of-type(3) .step-check::after {
+            display: none;
+            background-color: rgb(0, 132, 255);
+        }
+
+        .progress-step-container:nth-of-type(3) .step-check {
+            background-image: none;
+            background-color: rgb(0, 132, 255);
+        }
+
+        .progress-step-container:nth-of-type(2) .step-check::after {
+            background-color: rgb(0, 132, 255);
+        }
+
+        .progress-step-container:nth-of-type(2) .step-check {
+            background-image: none;
+            background-color: rgb(0, 132, 255);
+        }
+
+        .step-check::after {
+            content: "";
+            width: 15vw;
+            height: 2px;
+            background-color: rgb(0, 132, 255);
+            position: absolute;
+            top: 50%;
+            right: 0;
+            transform: translateX(100%) translateY(-50%);
+        }
+
+        .step-title {
+            color: rgb(44, 46, 45);
+        }
+
+        .container {
+            width: 60%;
+            margin: 2rem auto;
+            padding: 1rem;
+            border: 1px solid lightblue;
+            background-color: #923b3b;
+        }
+
+        .input-line {
+          
+           margin-top: 10px;
+        }
+
+        label {
+            font-weight: bold;
+           
+        }
+
+        input {
+            width: 100%;
+            padding: 0.5rem;
+            box-sizing: border-box;
+        }
+
+        button {
+            background-color: #4caf50;
+            color: white;
+            padding: 0.5rem 1rem;
+            border: none;
+            cursor: pointer;
+            margin-top: 20px;
+            text-align: center;
+            margin-left: auto;
+    margin-right: auto;
+        }
+
+        .progress-checkout-container {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+        }
+
+        .progress-step-container {
+            display: flex;
+            align-items: center;
+        }
+
+        .step-check {
+            /* background-color: #ddd; */
+            height: 20px;
+            width: 20px;
+            border-radius: 50%;
+            margin-right: 0.5rem;
+        }
+
+        .step-check.active {
+            background-color: black;
+        }
+
+        .page-container {
+            background-color: lavender;
+            padding: 1rem;
+            border-radius: 5px;
+            margin-top: 1rem;
+            display: none;
+            width: 500px;
+            gap: 10px; 
+        }
+
+        .page-container.active {
+            display: block;
+        }
+
+        .review-container {
+            display: flex;
+            flex-direction:column;
+            flex-wrap: wrap;
+            width: 250px;
+            gap: 10px; 
+            margin-top: 20px;
+        }
+
+        .review-container .input-line {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+            flex-wrap: wrap;
+            gap: 10px; 
+            width: auto;
+            
+        }
+    </style>
+    <title>Checkout Form</title>
+</head>
+<body>
+    <header>
+        <h1 class="logo">Shopping</h1>
+        <ul class="menu-container">
+            <li class="menu-item">Home</li>
+            <li class="menu-item">Collections</li>
+            <li class="menu-item">Products</li>
+            <li class="menu-item red">For Sale</li>
+        </ul>
+        <div class="menu-icons-container">
+            <div id="search-btn" class="fas fa-search"></div>
+            <div id="cart-btn" class="fas fa-shopping-cart"></div> 
+            <div id="user-btn" class="fas fa-user"></div>
+        </div>
+    </header>
+
+    <div class="progress-checkout-container">
+        <div class="progress-step-container">
+            <div class="step-check active" id="stepShipping"></div>
+            <span class="step-title">Shipping</span>
+        </div>
+        <div class="progress-step-container">
+            <div class="step-check" id="stepPayment"></div>
+            <span class="step-title">Payment</span>
+        </div>
+        <div class="progress-step-container">
+            <div class="step-check" id="stepReview"></div>
+            <span class="step-title">Review</span>
+        </div>
+    </div>
+     
+
+<div class="page-container active" id="shippingAddressPage">
+    <h1 class="form-title">Shipping Address</h1>
+
+    <form action="" class="checkout-form">
+        <div class="input-line">
+            <label for="fullName">Full Name</label>
+            <input type="text" name="fullName" id="fullName" placeholder="Your name and surname">
+        </div>
+        <div class="input-line">
+            <label for="address">Address</label>
+            <input type="text" name="address" id="address" placeholder="1-23">
+        </div>
+        <div class="input-container">
+            <div class="input-line">
+                <label for="state">State</label>
+                <input type="text" name="state" id="state" placeholder="09-21">
+            </div>
+            <div class="input-line">
+                <label for="pinCode">Pin code</label>
+                <input type="text" name="pinCode" id="pinCode" placeholder="*">
+            </div>
+        </div>
+        <button type="button" onclick="captureShippingDetails()">Next</button>
+    </form>
+</div>
+
+<div class="page-container" id="paymentPage">
+    <div class="input-line">
+    <h1 class="form-title">Payment Details</h1>
+</div>
+    <form action="" class="checkout-form">
+        <div class="input-line">
+            <label for="cardHolderName">Name on card</label>
+            <input type="text" name="cardHolderName" id="cardHolderName" placeholder="Your name and surname">
+        </div>
+        <div class="input-line">
+            <label for="cardNumber">Card number</label>
+            <input type="text" name="cardNumber" id="cardNumber" placeholder="123">
+        </div>
+        <div class="input-container">
+            <div class="input-line">
+                <label for="expiryDate">Expiring Date</label>
+                <input type="text" name="expiryDate" id="expiryDate" placeholder="09-21">
+            </div>
+            <div class="input-line">
+                <label for="cvc">CVC</label>
+                <input type="text" name="cvc" id="cvc" placeholder="*">
+            </div>
+        </div>
+        <button type="button" onclick="capturePaymentDetails()">Next</button>
+    </form>
+</div>
+         
+<div class="page-container" id="reviewPage">
+    <h2 class="form-title">Review</h2>
+    <form action="" class="checkout-form">
+        <div class="review-container">
+            <div class="input-line">
+              <h3><label for="shippingAddress">Shipping </label></h3>  
+                <div>
+                    <div>
+                        <label for="fullName">Full Name of student:</label>
+                    </div>
+                    <div>
+                        <span id="fullNameValue"></span>
+                    </div>
+                    <div>
+                        <label for="address">Address:</label>
+                        <span id="addressValue"></span>
+                    </div>
+                    <div>
+                        <label for="state">State:</label>
+                        <span id="stateValue"></span>
+                    </div>
+                    <div>
+                        <label for="pinCode">Pin Code:</label>
+                        <span id="pinCodeValue"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="input-line">
+               <h3><label for="paymentDetails">Payment Details</label></h3>
+                <div>
+                    <div>
+                        <label for="cardHolderName">Name on Card:</label>
+                        <span id="cardHolderNameValue"></span>
+                    </div>
+                    <!-- Add similar blocks for other payment details -->
+                    <div>
+                        <label for="cardNumber">Card Number:</label>
+                        <span id="cardNumberValue"></span>
+                    </div>
+                    <div>
+                        <label for="expiryDate">Expiring Date:</label>
+                        <span id="expiryDateValue"></span>
+                    </div>
+                    <div>
+                        <label for="cvc">CVC:</label><br/>
+                        <span id="cvcValue"></span>
+                    </div>
+                </div>
+            </div>
+
+                <button type="button" id="submitBtn" onclick="submitOrder()">Submit</button>
+                <p id="thankYouMessage" style="display: none;">"Thank you for choosing our store for your shopping needs! 
+                    We appreciate your trust in our products and services. Your satisfaction is our priority, 
+                    and we look forward to serving you again. If you have any feedback or inquiries,
+                     feel free to reach out. Happy shopping!"
+
+
+
+
+
+                </p>
+            </div>
+        </div>
+    </form>
+</div>
+
+
+<script>
+    let shippingDetails = {};
+    let paymentDetails = {};
+
+    function captureShippingDetails() {
+        shippingDetails.fullName = document.getElementById('fullName').value;
+        shippingDetails.address = document.getElementById('address').value;
+        shippingDetails.state = document.getElementById('state').value;
+        shippingDetails.pinCode = document.getElementById('pinCode').value;
+
+        showNextPage('paymentPage');
+    }
+
+    function capturePaymentDetails() {
+        paymentDetails.cardHolderName = document.getElementById('cardHolderName').value;
+        paymentDetails.cardNumber = document.getElementById('cardNumber').value;
+        paymentDetails.expiryDate = document.getElementById('expiryDate').value;
+        paymentDetails.cvc = document.getElementById('cvc').value;
+
+        updateReviewPage();
+        showNextPage('reviewPage');
+    }
+
+    function updateReviewPage() {
+        document.getElementById('fullNameValue').textContent = shippingDetails.fullName;
+        document.getElementById('addressValue').textContent = shippingDetails.address;
+        document.getElementById('stateValue').textContent = shippingDetails.state;
+        document.getElementById('pinCodeValue').textContent = shippingDetails.pinCode;
+
+        document.getElementById('cardHolderNameValue').textContent = paymentDetails.cardHolderName;
+        document.getElementById('cardNumberValue').textContent = paymentDetails.cardNumber;
+        document.getElementById('expiryDateValue').textContent = paymentDetails.expiryDate;
+        document.getElementById('cvcValue').textContent = paymentDetails.cvc;
+    }
+
+    function showNextPage(nextPageId) {
+        document.querySelectorAll('.page-container').forEach(page => {
+            page.classList.remove('active');
+        });
+
+        document.getElementById(nextPageId).classList.add('active');
+
+        updateProgressSteps(nextPageId);
+    }
+
+    function updateProgressSteps(currentPageId) {
+        const progressSteps = document.querySelectorAll('.step-check');
+        progressSteps.forEach(step => {
+            step.classList.remove('active');
+        });
+
+        const currentStep = document.getElementById(`step${currentPageId.charAt(0).toUpperCase() + currentPageId.slice(1)}`);
+        if (currentStep) {
+            currentStep.classList.add('active');
+        }
+    }
+
+    function submitOrder() {
+        // Additional logic to submit the order
+        document.getElementById('thankYouMessage').style.display = 'block';
+    }
+</script>
+
+</body>
+</html>

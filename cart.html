@@ -1,0 +1,411 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Add this to the head section of your HTML -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous">
+
+    <title>Shopping Cart</title>
+</head>
+<body>
+   
+      <div class="navbar">
+         <div class="title">
+             <h1>Shopping Cart</h1>
+         </div>
+         <div class="cart">
+             <i class="cart-icon fas fa-shopping-cart"></i>
+             <div id="cart_amount">0</div>
+         </div>
+  </div>
+
+    <!-- shop items -->
+    <div id="shop"></div>
+
+    <!-- cart page -->
+    <div class="cart_page">
+        <div class="shopping-cart" id="shopping_cart"></div>
+        <div class="label" id="label"></div>
+    </div>
+
+
+ <script>
+   // script.js
+
+let label = document.getElementById("label");
+let ShoppingCart = document.getElementById("shopping_cart");
+
+let basket = JSON.parse(localStorage.getItem("data")) || [];
+
+let calculate = () => {
+    let cartIcon = document.getElementById("cart_amount");
+    cartIcon.innerHTML = basket.map((x) => x.item).reduce((x, y) => x + y, 0);
+};
+
+calculate();
+
+let generateShop = () => {
+    const shop = document.getElementById('shop');
+    let shopItemsData = [
+  
+{
+                "id": 0,
+                "img": 'https://image.made-in-china.com/2f0j00hwaVGrgEOuqA/Tomato-Fragrance-Tamoto-Flavor-Used-for-Drink.webp',
+                "name": 'Tomato',
+                "price": 20,
+            },
+            {
+               "id": 1,
+               "img": 'https://m.media-amazon.com/images/I/313dtY-LOEL._AC_UF1000,1000_QL80_.jpg',
+                "name": 'Potato',
+                "price": 30,
+            },
+            {
+               "id": 2,
+               "img": 'https://andamangreengrocers.com/wp-content/uploads/2021/12/red-onion-25288672.jpg',
+                "name": 'Onion',
+                "price": 75,
+            },
+            {
+               "id": 3,
+               "img": 'https://www.avtmccormick.com/wp-content/uploads/2019/12/p9.jpg',
+                "name": 'Carrot',
+                "price": 40,
+            },
+            {
+               "id": 4,
+               "img": 'https://static.libertyprim.com/files/familles/banane-large.jpg?1569271725',
+                "name": 'Banana',
+                "price": 30,
+            },
+            {
+               "id": 5,
+               "img": 'https://m.media-amazon.com/images/I/611a1wD9ZGL.jpg',
+                "name": 'Pomegranate',
+                "price": 80,
+            },
+            {
+               "id": 6,
+               "img": 'https://images.thequint.com/thequint%2F2023-06%2F62110fe1-d3d5-4624-ac19-ff0d913d2532%2Ffresh_slice_pineapple_jpg_s_1024x1024_w_is_k_20_c_nWugAgnoslAS_GNIRAkKkC9me_jk_rmDFfw6RWWgPko_.jpg',
+                "name": 'Pine Apple',
+                "price": 80,
+            },
+            {
+               "id": 7,
+               "img": 'https://5.imimg.com/data5/VD/FV/FA/SELLER-52971039/black-grapes-5-kg.jpg',
+                "name": 'Black grapes',
+                "price": 90,
+            },
+            {
+               "id": 8,
+               "img": 'https://m.economictimes.com/thumb/height-450,width-600,imgsize-73862,msid-102281194/strawberries_istock.jpg',
+                "name": 'Strawberry',
+                "price": 120,
+            },
+            {
+               "id": 9,
+               "img": 'https://rukminim2.flixcart.com/image/850/1000/l16rde80/plant-sapling/a/1/w/no-annual-yes-glenn-grafted-mango-plant-1-exotica-glenn-original-imagcsh2gpnhwrk3.jpeg?q=90',
+                "name": 'Mango',
+                "price": 90,
+            },
+            {
+               "id": 10,
+               "img": 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS484bEW2HfOMyGgWGHk4-dASLXc7q5CtOOyDrVEUV6ruDIGiUM-pEKMzuxt6hcqZpHpmw&usqp=CAU',
+                "name": 'Blue Berry',
+                "price": 190,
+            },
+            {
+               "id": 11,
+               "img": 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQXGcFYNccOuYz47TH4_lN2v5Igt6kuG3Dy_hz2i9Kqbx_hD1E6VYzGC1KRZAq0IbC-T_I&usqp=CAU',
+                "name": 'Water Melon',
+                "price": 70,
+            }
+
+
+    ];
+
+    shop.innerHTML = `<div class='shop_container'>${shopItemsData.map((x) => {
+        let { id, name, price, img } = x;
+        return `
+            <div class='shop_item' id=product-id-${id}>
+                <img src='${img}' alt='' />
+                <div class='product_info'>
+                    <h5>${name}</h5>
+                    <p class='price'> <span>RS:</span> ${price} </p>
+                    <button onclick="add_to_cart(${id},'${name}',${price},'${img}')">Add to Cart </button>
+                </div>
+            </div>`;
+    }).join('')}</div>`;
+};
+
+let add_to_cart = (id, name, price, img) => {
+    basket.push({
+        id: id,
+        item: 1,
+        name: name,
+        price: price,
+        img: img
+    });
+
+    localStorage.setItem('data', JSON.stringify(basket));
+    calculate();
+};
+
+let generateCartItems = () => {
+    if (basket.length !== 0) {
+        ShoppingCart.innerHTML = basket.map((x) => {
+            let { id, name, price, item, img } = x;
+            return `
+                <div class="cart_item" id=product-id-${id}>
+                    <p>${name}</p>
+                    <div class='cart_item_img'>
+                        <img width="100" src=${img} alt="" />
+                    </div>
+                    <p >Rs ${price}</p>
+                    <button class='rmv_btn'  onclick="removeItem(${id})">Remove</button>
+                </div>`;
+        }).join("");
+    } else {
+        ShoppingCart.innerHTML = '<h3>Shopping cart is empty</h3>';
+    }
+    
+};
+
+let removeItem = (id) => {
+    basket = basket.filter((x) => x.id != id);
+    localStorage.setItem("data", JSON.stringify(basket));
+    calculate();
+    generateCartItems();
+};
+
+let Total_amount = () => {
+    let total_amount = 0;
+    basket.map((item) => {
+        total_amount += item.item * item.price;
+    });
+    label.innerHTML = `
+        <div class='checkout_area'>
+            <h2>Total Price:  ${total_amount} </h2>
+            <button class='update' onClick=window.location.reload()>
+                Update cart
+            </button>
+            <a class='checkout' href="{{ url_for('checkout') }}">
+                <button>Checkout</button>
+            </a>
+        </div>`;
+};
+// Function to redirect to the checkout page
+function redirectToCheckout() {
+    // Replace 'checkout-page.html' with the actual URL of your checkout page
+    window.location.href = 'checkout.html';
+}
+
+
+Total_amount();
+
+generateShop();
+generateCartItems();
+</script>
+
+<style>
+  
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        text-decoration: none;
+        list-style: none;
+        border: none;
+        outline: none;
+    }
+
+    body {
+        font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    }
+
+    /* Navbar styles */
+    .navbar {
+        background: lavender;
+        display: flex;
+        justify-content: space-around;
+        padding: 10px;
+        font-size: 20px;
+        font-weight: bold;
+    }
+    .navbar h1{
+      color: black;
+    }
+    .navbar a {
+        color: black;
+    }
+     
+    .cart-icon {
+            font-size: 50px;
+            margin-right: 5px;
+            color: black;
+        }
+    .navbar .cart {
+        height: 30px;
+        width: 30px;
+        background: yellow;
+        border-radius: 50%;
+        color:#111;
+        text-align: center;
+        line-height: 30px;
+    }
+
+    /* Shop styles */
+    #shop {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-around;
+        padding: 20px;
+    }
+    .shop_container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-around;
+    }
+
+    .shop_item {
+        width: 20%;
+        margin: 20px;
+        box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+        padding: 10px;
+    }
+
+    .shop_item img {
+        width: 100%;
+        height: 300px;
+        box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+    }
+
+    .product_info {
+        padding: 5px;
+    }
+
+    .product_info h5 {
+        font-size: 25px;
+        padding: 5px;
+    }
+
+    .product_info .price {
+        font-size: 18px;
+        padding: 3px;
+    }
+
+    .product_info .price span {
+        color: rgb(233, 15, 226);
+    }
+
+    .product_info button {
+        width: 100%;
+        padding: 10px;
+        font-size: 18px;
+        background: #111;
+        color: yellow;
+        margin-top: 15px;
+        cursor: pointer;
+        transition: .5s ease-in-out;
+    }
+
+    .product_info button:hover {
+        border: 1px solid #111;
+        background: transparent;
+        color: #111;
+    }
+
+    /* Other styles (Cart, Checkout, etc.) can be added here */
+
+
+/* cart page  */
+
+.cart_page{
+    padding: 20px 50px;
+
+}
+.cart_item{
+     display: flex;
+     justify-content: space-around;
+     margin: 20px 0;
+     box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+     align-items: center;
+     padding: 20px;
+}
+
+.cart_item .buttons{
+    display: flex;
+}
+
+.cart_item .buttons .quantity{
+    padding: 0 20px;
+    border: 1px solid #111;
+    height: 50px;
+    margin-top: 15px;
+    line-height: 50px;
+    font-size: 32px;
+}
+
+.cart_item .buttons button{
+    display: block;
+    height: 50px;
+    width: 50px;
+    border-radius: 50%;
+    line-height: 50px;
+    background: #111;
+    font-size: 30px;
+    color: yellow;
+    margin: 10px;
+    transition: .4s ease-in;
+    cursor: pointer;
+}
+
+.cart_item .buttons button:hover{
+    background: transparent;
+    border: 1px solid;
+    color: #111;
+}
+
+.cart_item .rmv_btn{
+    padding: 15px 20px;
+    font-size: 20px;
+    background: #111;
+    color: #fff;
+    cursor: pointer;
+    transition: .5s ease-in;
+}
+
+.cart_item .rmv_btn:hover{
+    border: 1px solid #111;
+    color: #000;
+    background: transparent;
+}
+
+
+/* checkout_area */
+
+.checkout_area {
+    text-align: center;
+}
+
+.checkout_area button{
+    padding: 15px 20px;
+    cursor: pointer;
+    width: 50%;
+    margin: 20px auto;
+    font-size: 18px;
+    background-color: #111;
+    color: #fff;
+    transition: .5s ease-in;
+}
+
+.checkout_area button:hover{
+    border: 1px solid #111;
+    color: #000;
+    background: transparent;
+}
+</style>
+</body>
+
+
+</html>
